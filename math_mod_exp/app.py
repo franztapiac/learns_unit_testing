@@ -46,11 +46,11 @@ def extended_gcd(a, b):
     y = x_prev - (a // b) * y_prev
     return gcd, x, y
 
-def modular_inverse(value, modulus):
-    """Computes the modular inverse of 'value' modulo 'modulus'."""
-    gcd, inverse, _ = extended_gcd(value, modulus)
+def modular_inverse(base, modulus):
+    """Computes the modular inverse of 'base' modulo 'modulus'."""
+    gcd, inverse, _ = extended_gcd(base, modulus)
     if gcd != 1:
-        raise ValueError(f"No modular inverse exists for {value} modulo {modulus}")
+        raise ValueError(f"No modular inverse exists for {base} modulo {modulus}")
     return inverse % modulus
 
 def modular_exp_efficient(base, exponent, modulus):
@@ -61,16 +61,17 @@ def modular_exp_efficient(base, exponent, modulus):
     Arguments:
     - base: the base integer (can be negative)
     - exponent: the exponent integer (can be negative)
-    - modulus: the modulus integer (must be positive and non-zero)
+    - modulus: the modulus integer (must be positive)
 
     Notes:
     - If base is negative, it is reduced modulo 'modulus' before computation.
     - If exponent is negative, the modular inverse of the base is used.
-    - Follows the behavior of Python's built-in pow(base, exponent, modulus) for integers.
+    - Returns 0 immediately if modulus is 1 (trivial group).
+    - Considers 0^0 as 1, like Python's built-in pow(base, exponent, modulus).
 
     Raises:
-    - ValueError if modulus is zero or modular inverse does not exist.
-    - TypeError if base, exponent, or modulus is not an integer.
+    - TypeError if any argument is not an integer.
+    - ValueError if modulus <= 0 or modular inverse does not exist for negative exponent.
     """
     
     # TODO Testing this?
@@ -80,18 +81,13 @@ def modular_exp_efficient(base, exponent, modulus):
     if modulus <= 0:
         raise ValueError("Modulus must be a positive integer")
     
-    # TODO Checking mod==1 before inverse only works when only expect to not handle inverses
+    # Trivial case
     if modulus == 1:
         return 0
-    
-    # Match result of Python's pow() when base & exponent = 0
+
+    # Special case: 0^0 mod m is defined as 1 mod m.
     if base == 0 and exponent == 0:
         return 1 % modulus
-    
-    # TODO This is not always, true. pow(0,-4,1) works, but pow(0,-100,13) doesn't. So check actual invertibility
-    if base == 0 and exponent < 0:
-        raise ValueError("Base is invertible for given modulus")
-
 
     base_reduced = base % modulus
 
@@ -101,7 +97,6 @@ def modular_exp_efficient(base, exponent, modulus):
         exponent = -exponent
 
     result = 1
-
     while exponent > 0:
         if exponent % 2 == 1:  # if exp is odd
             result = (result * base_reduced) % modulus
