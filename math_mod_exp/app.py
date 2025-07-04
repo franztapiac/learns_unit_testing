@@ -1,41 +1,19 @@
-
-def add(x, y):
-    """Add Function"""
-    return x + y
-
-
-def subtract(x, y):
-    """Subtract Function"""
-    return x - y
-
-
-def multiply(x, y):
-    """Multiply Function"""
-    return x * y
-
-
-def divide(x, y):
-    """Divide Function"""
-    if y == 0:
-        raise ValueError('Can not divide by zero!')
-    return x / y
-
-# Modular exponentiation
-def modular_exp(base, power, modulus):
-    """Basic modular exponentiation"""
-    if modulus == 1:
-        return 0
-    elif modulus == 0:
-        raise ValueError("Modulus cannot be zero")
+# # Basic modular exponentiation
+# def modular_exp(base, power, modulus):
+#     """Basic modular exponentiation"""
+#     if modulus == 1:
+#         return 0
+#     elif modulus <= 0:
+#         raise ValueError("Modulus must be a positive integer")
     
-    if power < 0:
-        raise ValueError("Negative exponent not supported yet")
+#     if power < 0:
+#         raise ValueError("Negative exponent not supported yet")
     
-    # Naive implementation: iterative multiplication and modulus at each step
-    result = 1
-    for _ in range(power):
-        result = (result * base) % modulus
-    return result
+#     # Naive implementation: iterative multiplication and modulus at each step
+#     result = 1
+#     for _ in range(power):
+#         result = (result * base) % modulus
+#     return result
 
 def extended_gcd(a, b):
     """Extended Euclidean Algorithm to compute the GCD and coefficients."""
@@ -46,14 +24,15 @@ def extended_gcd(a, b):
     y = x_prev - (a // b) * y_prev
     return gcd, x, y
 
-def modular_inverse(base, modulus):
+def modular_inverse(base, base_reduced, modulus):
     """Computes the modular inverse of 'base' modulo 'modulus'."""
-    gcd, inverse, _ = extended_gcd(base, modulus)
+    gcd, inverse, _ = extended_gcd(base_reduced, modulus)
     if gcd != 1:
         raise ValueError(f"No modular inverse exists for {base} modulo {modulus}")
     return inverse % modulus
 
-def modular_exp_efficient(base, exponent, modulus):
+# Complete modular exponentiation
+def modular_exp(base, exponent, modulus):
     
     """
     Efficient modular exponentiation using exponentiation by squaring.
@@ -92,7 +71,7 @@ def modular_exp_efficient(base, exponent, modulus):
 
     # Handle negative exponent
     if exponent < 0:
-        base_reduced = modular_inverse(base_reduced, modulus)
+        base_reduced = modular_inverse(base, base_reduced, modulus)
         exponent = -exponent
 
     result = 1
@@ -103,19 +82,3 @@ def modular_exp_efficient(base, exponent, modulus):
         exponent //= 2
 
     return result
-
-
-# factorial
-
-# modulus
-
-# remainder
-
-# square root
-
-# Floor division
-
-# Factorial
-
-# Logarithm
-

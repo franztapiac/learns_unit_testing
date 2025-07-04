@@ -2,36 +2,8 @@ import unittest
 import app
 
 class TestApp(unittest.TestCase):
-  
-  def test_add(self):
 
-    # assert methods: https://docs.python.org/3/library/unittest.html#unittest.TestCase.debug
-    self.assertEqual(app.add(10, 5), 15)
-    self.assertEqual(app.add(-1, 1), 0)
-    self.assertEqual(app.add(-1, -1), -2)
-
-  def test_subtract(self):
-    self.assertEqual(app.subtract(10, 5), 5)
-    self.assertEqual(app.subtract(-1, 1), -2)
-    self.assertEqual(app.subtract(-1, -1), 0)
-
-  def test_multiply(self):
-    self.assertEqual(app.multiply(10, 5), 50)
-    self.assertEqual(app.multiply(-1, 1), -1)
-    self.assertEqual(app.multiply(-1, -1), 1)
-
-  def test_divide(self):
-    self.assertEqual(app.divide(10, 5), 2)
-    self.assertEqual(app.divide(-1, 1), -1)
-    self.assertEqual(app.divide(-1, -1), 1)
-    self.assertEqual(app.divide(5, 2), 2.5)
-
-    with self.assertRaises(ValueError):
-      app.divide(10, 0)
-
-
-
-  # Modular exp: Basic tests
+  # 1 Modular exp: Basic tests
   def test_mod_exp_basic(self):
     # all positive
     self.assertEqual(app.modular_exp(2, 3, 5), 3)
@@ -48,7 +20,7 @@ class TestApp(unittest.TestCase):
     self.assertEqual(app.modular_exp(0, 13, 5), 0)
 
 
-  # Modular exp: invalid inputs
+  # 2 Modular exp: invalid inputs
   def test_mod_exp_invalid_inputs(self):
     with self.assertRaises(TypeError):
       app.modular_exp("base", 3, 5)
@@ -69,7 +41,7 @@ class TestApp(unittest.TestCase):
         app.modular_exp(2, 3, None)
 
 
-  # Modular exp: mod <= 0
+  # 3 Modular exp: mod <= 0
   def test_mod_exp_incorrect_modulus(self):
     with self.assertRaises(ValueError):
         app.modular_exp(2, 3, -5)
@@ -78,7 +50,7 @@ class TestApp(unittest.TestCase):
       app.modular_exp(2, 3, 0)
 
 
-  # Modular exp: mod = 1
+  # 4 Modular exp: mod = 1
   def test_mod_exp_mod_equals_one(self):
     self.assertEqual(app.modular_exp(10, 100, 1), 0)
     self.assertEqual(app.modular_exp(-10, 100, 1), 0)
@@ -89,32 +61,35 @@ class TestApp(unittest.TestCase):
     self.assertEqual(app.modular_exp(0, -100, 1), 0)
 
 
-  # Modular exp: base & exp = 0
+  # 5 Modular exp: base & exp = 0
   def test_mod_exp_zero_base_and_exponent(self):
     # By definition, 0^0 mod m returns 1 % m.
     self.assertEqual(app.modular_exp(0, 0, 7), 1)
     self.assertEqual(app.modular_exp(0, 0, 1), 0)
 
 
-  # Modular exp: negative exponent, valid
+  # 6 Modular exp: negative exponent, valid
   def test_mod_exp_negative_exp_valid(self):
     self.assertEqual(app.modular_exp(-5, -13, 17), 11)
     self.assertEqual(app.modular_exp(5, -13, 17), 6)
 
 
-  # Modular exp: negative exponent, invalid (no modular inverse)
+  # 7 Modular exp: negative exponent, invalid (no modular inverse)
   def test_mod_exp_no_modular_inverse(self):
-    with self.assertRaises(ValueError):
+    with self.assertRaises(ValueError) as e:
       app.modular_exp(-34, -13, 17) # -34 and 17 not coprime, inverse does not exist
+    self.assertEqual(str(e.exception), "No modular inverse exists for -34 modulo 17")
     
-    with self.assertRaises(ValueError):
+    with self.assertRaises(ValueError) as e:
       app.modular_exp(0, -13, 17) # 0 has no inverse under any modulus
+    self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo 17")
 
-    with self.assertRaises(ValueError):
+    with self.assertRaises(ValueError) as e:
       app.modular_exp(34, -13, 17) # 34 and 17 not coprime
+    self.assertEqual(str(e.exception), "No modular inverse exists for 34 modulo 17")
 
 
-  # Modular exp: large exponents
+  # 8 Modular exp: large exponents
   def test_large_exponents(self):
     # 2^1000 mod 1009 (1009 is prime)
     expected = pow(2, 1000, 1009)  # Using Python's built-in pow for expected value
