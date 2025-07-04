@@ -74,7 +74,6 @@ def modular_exp_efficient(base, exponent, modulus):
     - ValueError if modulus <= 0 or modular inverse does not exist for negative exponent.
     """
     
-    # TODO Testing this?
     if not all(isinstance(x, int) for x in (base, exponent, modulus)):
         raise TypeError("All arguments must be integers")
 
