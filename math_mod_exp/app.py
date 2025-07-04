@@ -1,19 +1,32 @@
-# # Basic modular exponentiation
-# def modular_exp(base, power, modulus):
-#     """Basic modular exponentiation"""
-#     if modulus == 1:
-#         return 0
-#     elif modulus <= 0:
-#         raise ValueError("Modulus must be a positive integer")
+# Basic modular exponentiation
+def modular_exp(base, exponent, modulus):
+    """Basic modular exponentiation. Misses:
+    - Handling of negative exponents with valid and invalid inverses
+    - Implementation is naively slow, rather than efficient
+    """
+    if not all(isinstance(x, int) for x in (base, exponent, modulus)):
+        raise TypeError("All arguments must be integers")
     
-#     if power < 0:
-#         raise ValueError("Negative exponent not supported yet")
+    if modulus <= 0:
+        raise ValueError("Modulus must be a positive integer")
     
-#     # Naive implementation: iterative multiplication and modulus at each step
-#     result = 1
-#     for _ in range(power):
-#         result = (result * base) % modulus
-#     return result
+    # Trivial case
+    if modulus == 1:
+        return 0
+    
+    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
+    if base == 0 and exponent == 0:
+        return 1 % modulus
+    
+    if exponent < 0:
+        raise ValueError("Negative exponent not supported yet")
+    
+    # Naive implementation: iterative multiplication and modulus at each step
+    result = 1
+    for _ in range(exponent):
+        result = (result * base) % modulus
+    
+    return result
 
 def extended_gcd(a, b):
     """Extended Euclidean Algorithm to compute the GCD and coefficients."""
@@ -32,7 +45,7 @@ def modular_inverse(base, base_reduced, modulus):
     return inverse % modulus
 
 # Complete modular exponentiation
-def modular_exp(base, exponent, modulus):
+def modular_exp_efficient(base, exponent, modulus):
     
     """
     Efficient modular exponentiation using exponentiation by squaring.
@@ -63,7 +76,7 @@ def modular_exp(base, exponent, modulus):
     if modulus == 1:
         return 0
 
-    # Special case: 0^0 mod m is defined as 1 mod m.
+    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
     if base == 0 and exponent == 0:
         return 1 % modulus
 
