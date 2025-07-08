@@ -88,7 +88,7 @@ class TestApp(unittest.TestCase):
 
   # 5 Modular exp: base & exp = 0
   def test_6_zero_base_and_exponent(self):
-    # By definition, 0^0 mod ±m returns 1 % ±m.
+    # By definition, 0^0 mod m returns 1 % m.
     
     self.assertEqual(app.modular_exp(0, 0, 7), 1)
     self.assertEqual(app.modular_exp(0, 0, -7), -6)
@@ -154,7 +154,7 @@ class TestApp(unittest.TestCase):
 
   def test_10_rejects_pow_use(self):
     """Detects whether pow() was used instead of really implementing modular exponentiation."""
-
+    # TODO This test needs to check that every return point does not return pow()
     with self.assertRaises(ValueError) as context:
       app.modular_exp(6, -1, 9)  # 6 and 9 are not coprime → no inverse
 

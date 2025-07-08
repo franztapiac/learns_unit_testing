@@ -41,12 +41,12 @@ def extended_gcd(a, b):
     y = x_prev - (a // b) * y_prev
     return gcd, x, y
 
-def modular_inverse(base, base_reduced, modulus):
+def modular_inverse(base, base_reduced, modulus, abs_modulus):
     """Computes the modular inverse of 'base' modulo 'modulus'."""
-    gcd, inverse, _ = extended_gcd(base_reduced, modulus)
+    gcd, inverse, _ = extended_gcd(base_reduced, abs_modulus)
     if gcd != 1:
         raise ValueError(f"No modular inverse exists for {base} modulo {modulus}")
-    return inverse % modulus
+    return inverse % abs_modulus
 
 # Complete modular exponentiation
 def modular_exp(base, exponent, modulus):
@@ -87,15 +87,15 @@ def modular_exp(base, exponent, modulus):
     if abs_modulus == 1:
         return 0
 
-    # Special case: 0^0 mod ±m is defined as ±1 mod m; saves computation
+    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
     if base == 0 and exponent == 0:
-        return 1 % abs_modulus if modulus > 0 else -1 % abs_modulus
+        return 1 % modulus
 
     base_reduced = base % abs_modulus
 
     # Handle negative exponent
     if exponent < 0:
-        base_reduced = modular_inverse(base, base_reduced, abs_modulus)
+        base_reduced = modular_inverse(base, base_reduced, modulus, abs_modulus)
         exponent = -exponent
 
     result = 1
