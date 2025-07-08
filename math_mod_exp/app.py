@@ -1,5 +1,8 @@
-# Basic modular exponentiation
 def modular_exp(base, exponent, modulus):
+    return pow(base, exponent, modulus)
+
+# Basic modular exponentiation
+def modular_exp_basic(base, exponent, modulus):
     """Basic modular exponentiation. Misses:
     - Handling of negative exponents with valid and invalid inverses
     - Implementation is naively slow, rather than efficient
@@ -45,7 +48,7 @@ def modular_inverse(base, base_reduced, modulus):
     return inverse % modulus
 
 # Complete modular exponentiation
-def modular_exp_efficient(base, exponent, modulus):
+def modular_exp_eff(base, exponent, modulus):
     
     """
     Efficient modular exponentiation using exponentiation by squaring.
