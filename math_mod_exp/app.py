@@ -55,9 +55,9 @@ def modular_exp(base, exponent, modulus):
     Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus.
 
     Arguments:
-    - base (int): can be negative
-    - exponent (int): can be negative
-    - modulus (int): can be positive or negative
+    - base (int)
+    - exponent (int)
+    - modulus (int): cannot be zero
 
     Returns:
     - result (int): satisfies result ≡ base^exponent (mod abs(modulus))
@@ -67,7 +67,8 @@ def modular_exp(base, exponent, modulus):
     Notes:
     - If base is negative, it is reduced modulo 'modulus' before computation.
     - If exponent is negative, the modular inverse of the base is used.
-    - Returns 0 immediately if modulus is 1 (trivial group).
+    - If modulus is negative, result is adjusted to lie within the negative modular range [modulus, 0).
+    - Returns 0 immediately if modulus is ±1 (trivial group).
     - Considers 0^0 as 1, like Python's built-in pow(base, exponent, modulus).
 
     Raises:
@@ -108,4 +109,4 @@ def modular_exp(base, exponent, modulus):
     if modulus < 0 and result != 0:
         result -= abs_modulus
 
-    return result
+    return int(result)
