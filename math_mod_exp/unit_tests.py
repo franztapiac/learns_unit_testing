@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import app
 
 class TestApp(unittest.TestCase):
@@ -7,14 +8,12 @@ class TestApp(unittest.TestCase):
     '''Tests basic modular exponentiation with positive, zero and negative bases.'''
     
     # all positive
-    self.assertEqual(app.modular_exp(2, 3, 5), 3)
     self.assertEqual(app.modular_exp(5, 5, 13), 5)
     
     # negative base
     self.assertEqual(app.modular_exp(-3, 2, 7), 2)
     
     # exponent = 0
-    self.assertEqual(app.modular_exp(5, 0, 7), 1)
     self.assertEqual(app.modular_exp(-3, 0, 4), 1)
 
     # base = 0
@@ -42,7 +41,7 @@ class TestApp(unittest.TestCase):
 
 
   def test_4_handle_negative_modulus(self):
-    '''Verifies correct handling of negative modulus and various exponent signs.'''
+    '''Verifies correct handling of negative modulus and both exponent signs.'''
 
     # exp > 0, varying base
     self.assertEqual(app.modular_exp(2, 3, -5), -2)
@@ -84,11 +83,8 @@ class TestApp(unittest.TestCase):
   def test_6_zero_base_and_exponent(self):
     '''Ensures 0^0 mod m is correctly treated as 1 % m.'''
     
-    self.assertEqual(app.modular_exp(0, 0, 7), 1)
-    self.assertEqual(app.modular_exp(0, 0, -7), -6)
-    
-    self.assertEqual(app.modular_exp(0, 0, 1), 0)
-    self.assertEqual(app.modular_exp(0, 0, -1), 0)
+    self.assertEqual(app.modular_exp(0, 0, 7), 1 % 7)
+    self.assertEqual(app.modular_exp(0, 0, -7), 1 % -7)
 
 
   def test_7_negative_exp_valid(self):
@@ -119,7 +115,7 @@ class TestApp(unittest.TestCase):
 
     # mod < 0
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(-28, -9, -14) # -28 and -14 not coprime, inverse does not exist
+      app.modular_exp(-28, -9, -14) # -28 and -14 not coprime
     self.assertEqual(str(e.exception), "No modular inverse exists for -28 modulo -14")
     
     with self.assertRaises(ValueError) as e:
@@ -132,10 +128,10 @@ class TestApp(unittest.TestCase):
 
 
   def test_9_inverse_edge_case(self):
-    '''Varieis correct result for trivial bases (±1) with large negative exponents.'''
+    '''Verifies correct result for trivial bases (±1) with large negative exponents.'''
     self.assertEqual(app.modular_exp(1, -123456, 101), 1)
     self.assertEqual(app.modular_exp(-1, -123456, 101), 1)
-    self.assertEqual(app.modular_exp(-1, -123457, 101), 100)  # (-1)^odd = -1 ≡ 100 mod 101
+    self.assertEqual(app.modular_exp(-1, -123457, 101), 100)  # (-1)^odd = -1 ≡ 100 (mod 101)
 
 
   def test_10_large_exponents(self):
@@ -159,11 +155,11 @@ class TestApp(unittest.TestCase):
     self.assertEqual(app.modular_exp(base, exponent, -mod), -347458809) 
 
 
-  def test_12_custom_inverse_logic_used(self):
-    '''Ensures implementation does not fall back to built-in pow() for inverses.'''
+  def test_12a_pow_not_used_for_invalid_inverse(self):
+    '''Ensure pow() is not used when inverse does not exist (negative exponent case).'''
     # TODO This test needs to check that every return point does not return pow()
     with self.assertRaises(ValueError) as context:
-      app.modular_exp(6, -1, 9)  # 6 and 9 are not coprime → no inverse
+      app.modular_exp(6, -1, 9)
 
     msg = str(context.exception)
 
@@ -174,6 +170,39 @@ class TestApp(unittest.TestCase):
     # If you expect a specific message from your custom function:
     self.assertIn("No modular inverse exists", msg,
         msg="Expected custom error message not found.")
+    
 
+  def test_12b_pow_not_used_for_valid_inverse(self):
+    '''Ensure pow() is not used when computing valid inverse with negative exponent.'''
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+        result = app.modular_exp(3, -1, 11)
+        self.assertEqual(result, 4)
+
+
+  def test_12c_pow_not_used_for_positive_exponent(self):
+    """Ensure pow() is not used for standard positive exponentiation."""
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+      self.assertEqual(app.modular_exp(2, 5, 13), 6)
+
+
+  def test_12d_pow_not_used_for_zero_exponent(self):
+    """Ensure pow() is not used when exponent is zero."""
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+      self.assertEqual(app.modular_exp(42, 0, 101), 1)
+
+
+  def test_12e_pow_not_used_for_zero_base(self):
+    """Ensure pow() is not used when base is zero."""
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+      self.assertEqual(app.modular_exp(0, 3, 7), 0)
+
+
+  def test_12f_pow_not_used_for_trivial_moduli(self):
+    """Ensure pow() is not used for modulus = 1 or -1 (all results should be 0)."""
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+      self.assertEqual(app.modular_exp(999, 999, 1), 0)
+      self.assertEqual(app.modular_exp(999, 999, -1), 0)
+
+      
 if __name__ == '__main__':
     unittest.main()

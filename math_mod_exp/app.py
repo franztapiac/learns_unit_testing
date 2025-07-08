@@ -52,7 +52,7 @@ def modular_inverse(base, base_reduced, modulus, abs_modulus):
 def modular_exp(base, exponent, modulus):
     
     """
-    Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus.
+    Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus, like pow().
 
     Arguments:
     - base (int)
