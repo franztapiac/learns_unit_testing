@@ -1,9 +1,9 @@
 # Basic modular exponentiation
-def modular_exp(base, exponent, modulus):
+def modular_exp_basic(base, exponent, modulus):
     """Basic modular exponentiation. Misses:
+    - Implementation is naively slow, rather than efficient
     - Handling of negative exponents with valid and invalid inverses
     - Handling of negative moduli
-    - Implementation is naively slow, rather than efficient
     """
     if not all(isinstance(arg, int) for arg in (base, exponent, modulus)):
         raise TypeError("All arguments must be integers.")
@@ -49,7 +49,7 @@ def modular_inverse(base, base_reduced, modulus, abs_modulus):
     return inverse % abs_modulus
 
 # Complete modular exponentiation
-def modular_exp_eff(base, exponent, modulus):
+def modular_exp(base, exponent, modulus):
     
     """
     Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus, like pow().

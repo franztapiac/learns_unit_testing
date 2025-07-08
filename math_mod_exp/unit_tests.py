@@ -105,28 +105,28 @@ class TestApp(unittest.TestCase):
     # mod > 0
     with self.assertRaises(ValueError) as e:
       app.modular_exp(-34, -13, 17) # -34 and 17 not coprime, inverse does not exist
-    self.assertEqual(str(e.exception), "No modular inverse exists for -34 modulo 17")
+    self.assertEqual(str(e.exception), "No modular inverse exists for -34 modulo 17.")
     
     with self.assertRaises(ValueError) as e:
       app.modular_exp(0, -13, 17) # 0 has no inverse under any modulus
-    self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo 17")
+    self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo 17.")
 
     with self.assertRaises(ValueError) as e:
       app.modular_exp(34, -13, 17) # 34 and 17 not coprime
-    self.assertEqual(str(e.exception), "No modular inverse exists for 34 modulo 17")
+    self.assertEqual(str(e.exception), "No modular inverse exists for 34 modulo 17.")
 
     # mod < 0
     with self.assertRaises(ValueError) as e:
       app.modular_exp(-28, -9, -14) # -28 and -14 not coprime
-    self.assertEqual(str(e.exception), "No modular inverse exists for -28 modulo -14")
+    self.assertEqual(str(e.exception), "No modular inverse exists for -28 modulo -14.")
     
     with self.assertRaises(ValueError) as e:
       app.modular_exp(0, -9, -14) # 0 has no inverse under any modulus
-    self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo -14")
+    self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo -14.")
 
     with self.assertRaises(ValueError) as e:
       app.modular_exp(28, -9, -14) # 28 and -14 not coprime
-    self.assertEqual(str(e.exception), "No modular inverse exists for 28 modulo -14")
+    self.assertEqual(str(e.exception), "No modular inverse exists for 28 modulo -14.")
 
 
   def test_9_inverse_edge_case(self):
@@ -176,32 +176,32 @@ class TestApp(unittest.TestCase):
 
   def test_12b_pow_not_used_for_valid_inverse(self):
     '''Ensure pow() is not used when computing valid inverse with negative exponent.'''
-    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
         result = app.modular_exp(3, -1, 11)
         self.assertEqual(result, 4)
 
 
   def test_12c_pow_not_used_for_positive_exponent(self):
     """Ensure pow() is not used for standard positive exponentiation."""
-    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
       self.assertEqual(app.modular_exp(2, 5, 13), 6)
 
 
   def test_12d_pow_not_used_for_zero_exponent(self):
     """Ensure pow() is not used when exponent is zero."""
-    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
       self.assertEqual(app.modular_exp(42, 0, 101), 1)
 
 
   def test_12e_pow_not_used_for_zero_base(self):
     """Ensure pow() is not used when base is zero."""
-    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
       self.assertEqual(app.modular_exp(0, 3, 7), 0)
 
 
   def test_12f_pow_not_used_for_trivial_moduli(self):
     """Ensure pow() is not used for modulus = 1 or -1 (all results should be 0)."""
-    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used")):
+    with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
       self.assertEqual(app.modular_exp(999, 999, 1), 0)
       self.assertEqual(app.modular_exp(999, 999, -1), 0)
 
