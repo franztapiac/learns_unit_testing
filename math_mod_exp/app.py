@@ -1,8 +1,5 @@
-def modular_exp(base, exponent, modulus):
-    return pow(base, exponent, modulus)
-
 # Basic modular exponentiation
-def modular_exp_basic(base, exponent, modulus):
+def modular_exp(base, exponent, modulus):
     """Basic modular exponentiation. Misses:
     - Handling of negative exponents with valid and invalid inverses
     - Handling of negative moduli
