@@ -5,6 +5,7 @@ def modular_exp(base, exponent, modulus):
 def modular_exp_basic(base, exponent, modulus):
     """Basic modular exponentiation. Misses:
     - Handling of negative exponents with valid and invalid inverses
+    - Handling of negative moduli
     - Implementation is naively slow, rather than efficient
     """
     if not all(isinstance(x, int) for x in (base, exponent, modulus)):
@@ -51,12 +52,17 @@ def modular_inverse(base, base_reduced, modulus):
 def modular_exp_eff(base, exponent, modulus):
     
     """
-    Efficient modular exponentiation using exponentiation by squaring.
+    Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus.
 
     Arguments:
-    - base: the base integer (can be negative)
-    - exponent: the exponent integer (can be negative)
-    - modulus: the modulus integer (must be positive)
+    - base (int): can be negative
+    - exponent (int): can be negative
+    - modulus (int): can be positive or negative
+
+    Returns:
+    - result (int): satisfies result ≡ base^exponent (mod abs(modulus))
+      and result lies in [0, modulus) if modulus > 0,
+      or in [modulus, 0) if modulus < 0.
 
     Notes:
     - If base is negative, it is reduced modulo 'modulus' before computation.
@@ -65,36 +71,41 @@ def modular_exp_eff(base, exponent, modulus):
     - Considers 0^0 as 1, like Python's built-in pow(base, exponent, modulus).
 
     Raises:
-    - TypeError if any argument is not an integer.
-    - ValueError if modulus <= 0 or modular inverse does not exist for negative exponent.
+    - TypeError if any argument is not an int.
+    - ValueError if modulus == 0 or modular inverse does not exist for negative exponent.
     """
     
     if not all(isinstance(x, int) for x in (base, exponent, modulus)):
         raise TypeError("All arguments must be integers")
 
-    if modulus <= 0:
-        raise ValueError("Modulus must be a positive integer")
+    if modulus == 0:
+        raise ValueError("Modulus must be non-zero")
+    
+    abs_modulus = abs(modulus)
     
     # Trivial case
-    if modulus == 1:
+    if abs_modulus == 1:
         return 0
 
-    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
+    # Special case: 0^0 mod ±m is defined as ±1 mod m; saves computation
     if base == 0 and exponent == 0:
-        return 1 % modulus
+        return 1 % abs_modulus if modulus > 0 else -1 % abs_modulus
 
-    base_reduced = base % modulus
+    base_reduced = base % abs_modulus
 
     # Handle negative exponent
     if exponent < 0:
-        base_reduced = modular_inverse(base, base_reduced, modulus)
+        base_reduced = modular_inverse(base, base_reduced, abs_modulus)
         exponent = -exponent
 
     result = 1
     while exponent > 0:
-        if exponent % 2 == 1:  # if exp is odd
-            result = (result * base_reduced) % modulus
-        base_reduced = (base_reduced * base_reduced) % modulus
-        exponent //= 2
+        if exponent & 1:  # if exp is odd (bitwise AND check for least sig. bit)
+            result = (result * base_reduced) % abs_modulus
+        base_reduced = (base_reduced * base_reduced) % abs_modulus
+        exponent >>= 1  # division by 2 (bitwise right shift by 1)
+
+    if modulus < 0 and result != 0:
+        result -= abs_modulus
 
     return result

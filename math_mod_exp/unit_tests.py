@@ -107,7 +107,7 @@ class TestApp(unittest.TestCase):
     """Detects whether pow() was used instead of really implementing modular exponentiation."""
 
     with self.assertRaises(ValueError) as context:
-        app.modular_exp(6, -1, 9)  # 6 and 9 are not coprime → no inverse
+      app.modular_exp(6, -1, 9)  # 6 and 9 are not coprime → no inverse
 
     msg = str(context.exception)
 
