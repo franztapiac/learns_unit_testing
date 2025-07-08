@@ -21,17 +21,19 @@ class TestApp(unittest.TestCase):
 
 
   def test_2_invalid_inputs(self):
-    '''Raises TypeError for non-integer base, exponent, or modulus.'''
+    '''Raises TypeError for non-integer base, exponent, or modulus. Must not fall back to non-modular pow().'''
 
-    for args in [
+    invalid_inputs = [
       ("base", 3, 5),
       (2.5, 3, 5),
       (2, "exponent", 5),
       (2, 3.5, 5),
       (2, 3, "mod"),
-      (2, 3, None), # TODO this works fine in pow(), no type error. Ask for type error, if m is None.
-    ]:
-      with self.assertRaises(TypeError):
+      (2, 3, None),  # Critical: modulus must not be None
+    ]
+
+    for args in invalid_inputs:
+      with self.assertRaises(TypeError, msg=f"Expected TypeError for args={args}. Built-in pow() may be used."):
         app.modular_exp(*args)
 
   def test_3_incorrect_modulus(self):
@@ -203,6 +205,6 @@ class TestApp(unittest.TestCase):
       self.assertEqual(app.modular_exp(999, 999, 1), 0)
       self.assertEqual(app.modular_exp(999, 999, -1), 0)
 
-      
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,4 @@
-def modular_exp_pow(base, exponent, modulus):
+def modular_exp(base, exponent, modulus):
     return pow(base, exponent, modulus)
 
 # Basic modular exponentiation
@@ -8,11 +8,14 @@ def modular_exp_basic(base, exponent, modulus):
     - Handling of negative moduli
     - Implementation is naively slow, rather than efficient
     """
-    if not all(isinstance(x, int) for x in (base, exponent, modulus)):
-        raise TypeError("All arguments must be integers")
+    if not all(isinstance(arg, int) for arg in (base, exponent, modulus)):
+        raise TypeError("All arguments must be integers.")
     
+    if modulus is None:
+        raise TypeError("Modulus must not be None.")
+
     if modulus <= 0:
-        raise ValueError("Modulus must be a positive integer")
+        raise ValueError("Modulus must be a positive integer.")
     
     # Trivial case
     if modulus == 1:
@@ -23,7 +26,7 @@ def modular_exp_basic(base, exponent, modulus):
         return 1 % modulus
     
     if exponent < 0:
-        raise ValueError("Negative exponent not supported yet")
+        raise ValueError("Negative exponent not supported yet.")
     
     # Naive implementation: iterative multiplication and modulus at each step
     result = 1
@@ -45,11 +48,11 @@ def modular_inverse(base, base_reduced, modulus, abs_modulus):
     """Computes the modular inverse of 'base' modulo 'modulus'."""
     gcd, inverse, _ = extended_gcd(base_reduced, abs_modulus)
     if gcd != 1:
-        raise ValueError(f"No modular inverse exists for {base} modulo {modulus}")
+        raise ValueError(f"No modular inverse exists for {base} modulo {modulus}.")
     return inverse % abs_modulus
 
 # Complete modular exponentiation
-def modular_exp(base, exponent, modulus):
+def modular_exp_eff(base, exponent, modulus):
     
     """
     Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus, like pow().
@@ -77,10 +80,13 @@ def modular_exp(base, exponent, modulus):
     """
     
     if not all(isinstance(x, int) for x in (base, exponent, modulus)):
-        raise TypeError("All arguments must be integers")
+        raise TypeError("All arguments must be integers.")
+    
+    if modulus is None:
+        raise TypeError("Modulus must not be None.")
 
     if modulus == 0:
-        raise ValueError("Modulus must be non-zero")
+        raise ValueError("Modulus must be non-zero.")
     
     abs_modulus = abs(modulus)
     
