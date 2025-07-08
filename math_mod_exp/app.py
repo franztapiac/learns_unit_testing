@@ -76,7 +76,7 @@ def modular_exp(base, exponent, modulus):
     - ValueError if modulus == 0 or modular inverse does not exist for negative exponent.
     """
     
-    if not all(isinstance(x, int) for x in (base, exponent, modulus)):
+    if not all(isinstance(arg, int) for arg in (base, exponent, modulus)):
         raise TypeError("All arguments must be integers.")
     
     if modulus is None:

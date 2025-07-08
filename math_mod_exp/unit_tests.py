@@ -81,7 +81,6 @@ class TestApp(unittest.TestCase):
     self.assertEqual(app.modular_exp(0, -100, -1), 0)
 
 
-  # 5 Modular exp: base & exp = 0
   def test_6_zero_base_and_exponent(self):
     '''Ensures 0^0 mod m is correctly treated as 1 % m.'''
     
