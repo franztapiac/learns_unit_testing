@@ -44,10 +44,12 @@ class TestApp(unittest.TestCase):
   # 3 Modular exp: mod <= 0
   def test_3_incorrect_modulus(self):
     with self.assertRaises(ValueError):
-        app.modular_exp(2, 3, -5)  # TODO implement negative mods
-      
-    with self.assertRaises(ValueError):
       app.modular_exp(2, 3, 0)
+
+
+  def test_handle_negative_modulus(self):
+    self.assertEqual(app.modular_exp(2, 3, -5), -2)
+    self.assertEqual(app.modular_exp(-2, 1, -5), -2)
 
 
   # 4 Modular exp: mod = 1

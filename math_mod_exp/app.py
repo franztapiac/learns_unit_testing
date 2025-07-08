@@ -1,4 +1,4 @@
-def modular_exp(base, exponent, modulus):
+def modular_exp_pow(base, exponent, modulus):
     return pow(base, exponent, modulus)
 
 # Basic modular exponentiation
@@ -49,7 +49,7 @@ def modular_inverse(base, base_reduced, modulus):
     return inverse % modulus
 
 # Complete modular exponentiation
-def modular_exp_eff(base, exponent, modulus):
+def modular_exp(base, exponent, modulus):
     
     """
     Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus.
