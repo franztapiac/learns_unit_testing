@@ -75,7 +75,7 @@ def modular_exp(base, exponent, modulus):
     - TypeError if any argument is not an int.
     - ValueError if modulus == 0 or modular inverse does not exist for negative exponent.
     """
-    
+    # Input validation
     if not all(isinstance(arg, int) for arg in (base, exponent, modulus)):
         raise TypeError("All arguments must be integers.")
     
@@ -87,11 +87,10 @@ def modular_exp(base, exponent, modulus):
     
     abs_modulus = abs(modulus)
     
-    # Trivial case
+    # Edge cases
     if abs_modulus == 1:
         return 0
 
-    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
     if base == 0 and exponent == 0:
         return 1 % modulus
 

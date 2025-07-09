@@ -1,8 +1,11 @@
+import app
+import time
 import unittest
 from unittest.mock import patch
-import app
+
 
 class TestApp(unittest.TestCase):
+  '''Unit test suite for modular exponentiation app. Tests are numbered according to final version (last task with this codebase).'''
 
   def test_1_basic(self):
     '''Tests basic modular exponentiation with positive, zero and negative bases.'''
@@ -18,6 +21,10 @@ class TestApp(unittest.TestCase):
 
     # base = 0
     self.assertEqual(app.modular_exp(0, 13, 5), 0)
+
+    # int result
+    result = app.modular_exp(3, 4, 5)
+    self.assertIsInstance(result, int)
 
 
   def test_2_invalid_inputs(self):
@@ -130,35 +137,60 @@ class TestApp(unittest.TestCase):
 
   def test_9_inverse_edge_case(self):
     '''Verifies correct result for trivial bases (±1) with large negative exponents.'''
+    
+    # mod > 0
     self.assertEqual(app.modular_exp(1, -123456, 101), 1)
     self.assertEqual(app.modular_exp(-1, -123456, 101), 1)
     self.assertEqual(app.modular_exp(-1, -123457, 101), 100)  # (-1)^odd = -1 ≡ 100 (mod 101)
 
+    # mod > 0
+    self.assertEqual(app.modular_exp(1, -123456, -101), -100)
+    self.assertEqual(app.modular_exp(-1, -123456, -101), -100)
+    self.assertEqual(app.modular_exp(-1, -123457, -101), -1)  # (-1)^odd = -1 ≡ 100 (mod -101)
 
-  def test_10_large_exponents(self):
-    '''Tests correctness with large positive and negative exponents.'''
-    
-    # exp > 0
-    self.assertEqual(app.modular_exp(2, 1000, 1009), 942)
-    self.assertEqual(app.modular_exp(2, 1000, -1009), -67)
 
-    # exp < 0
-    self.assertEqual(app.modular_exp(3, -98765, 10007), 2405)
-    self.assertEqual(app.modular_exp(3, -98765, -10007), -7602)
+  def test_10_exponentiation_complexity(self):
+    '''Checks if modular_exp uses fast exponentiation by comparing runtime growth for large values.'''
+    base = 123_456_789
+    mod = 1_000_000_007
+
+    # Small exponent
+    start_small = time.perf_counter()
+    app.modular_exp(base, 100_000, mod)
+    duration_small = time.perf_counter() - start_small
+
+    # Large exponent
+    start_large = time.perf_counter()
+    app.modular_exp(base, 100_000_000, mod)
+    duration_large = time.perf_counter() - start_large
+
+    # Now compare growth ratio
+    growth_ratio = duration_large / duration_small if duration_small > 0 else float('inf')
+    print(growth_ratio)
+
+    self.assertLess(growth_ratio, 50, (
+        f"modular_exp appears to grow linearly with exponent (growth ratio={growth_ratio:.2f}); "
+        "this suggests naive looping instead of exponentiation by squaring."
+    ))
 
 
   def test_11_extremely_large_values(self):
     '''Verifies correctness and performance with very large base and exponent.'''
     base = 123456789
     exponent = 987654321
-    mod = 1000000007
-    self.assertEqual(app.modular_exp(base, exponent, mod), 652541198)
-    self.assertEqual(app.modular_exp(base, exponent, -mod), -347458809) 
+    mod = 1_000_000_007
+
+    # mod > 0
+    self.assertEqual(app.modular_exp(base, exponent, mod), pow(base, exponent, mod))
+    self.assertEqual(app.modular_exp(base, -exponent, mod), pow(base, -exponent, mod))
+
+    # mod < 0
+    self.assertEqual(app.modular_exp(base, exponent, -mod), pow(base, exponent, -mod))
+    self.assertEqual(app.modular_exp(base, -exponent, -mod), pow(base, -exponent, -mod))
 
 
   def test_12a_pow_not_used_for_invalid_inverse(self):
     '''Ensure pow() is not used when inverse does not exist (negative exponent case).'''
-    # TODO This test needs to check that every return point does not return pow()
     with self.assertRaises(ValueError) as context:
       app.modular_exp(6, -1, 9)
 
