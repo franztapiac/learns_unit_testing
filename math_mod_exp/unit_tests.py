@@ -98,9 +98,11 @@ class TestApp(unittest.TestCase):
   def test_7_negative_exp_valid(self):
     '''Computes result using modular inverse for valid negative exponents.'''
     
+    # mod > 0
     self.assertEqual(app.modular_exp(-5, -13, 17), 11)
     self.assertEqual(app.modular_exp(5, -13, 17), 6)
 
+    # mod < 0
     self.assertEqual(app.modular_exp(-5, -13, -17), -6)
     self.assertEqual(app.modular_exp(5, -13, -17), -11)
 
@@ -233,7 +235,9 @@ class TestApp(unittest.TestCase):
   def test_12f_pow_not_used_for_trivial_moduli(self):
     """Ensure pow() is not used for modulus = 1 or -1 (all results should be 0)."""
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
+      # mod > 0
       self.assertEqual(app.modular_exp(999, 999, 1), 0)
+      # mod < 0
       self.assertEqual(app.modular_exp(999, 999, -1), 0)
 
 

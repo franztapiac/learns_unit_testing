@@ -111,4 +111,4 @@ def modular_exp(base, exponent, modulus):
     if modulus < 0 and result != 0:
         result -= abs_modulus
 
-    return int(result)
+    return result
