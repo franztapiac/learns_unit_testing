@@ -1,37 +1,3 @@
-# Basic modular exponentiation
-def modular_exp_basic(base, exponent, modulus):
-    """Basic modular exponentiation. Misses:
-    - Implementation is naively slow, rather than efficient
-    - Handling of negative exponents with valid and invalid inverses
-    - Handling of negative moduli
-    """
-    if not all(isinstance(arg, int) for arg in (base, exponent, modulus)):
-        raise TypeError("All arguments must be integers.")
-    
-    if modulus is None:
-        raise TypeError("Modulus must not be None.")
-
-    if modulus <= 0:
-        raise ValueError("Modulus must be a positive integer.")
-    
-    # Trivial case
-    if modulus == 1:
-        return 0
-    
-    # Special case: 0^0 mod m is defined as 1 mod m; saves computation
-    if base == 0 and exponent == 0:
-        return 1 % modulus
-    
-    if exponent < 0:
-        raise ValueError("Negative exponent not supported yet.")
-    
-    # Naive implementation: iterative multiplication and modulus at each step
-    result = 1
-    for _ in range(exponent):
-        result = (result * base) % modulus
-    
-    return result
-
 def extended_gcd(a, b):
     """Extended Euclidean Algorithm to compute the GCD and coefficients."""
     if b == 0:

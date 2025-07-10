@@ -182,13 +182,21 @@ class TestApp(unittest.TestCase):
     exponent = 987654321
     mod = 1_000_000_007
 
-    # mod > 0
+    # mod > 0, base > 0
     self.assertEqual(app.modular_exp(base, exponent, mod), pow(base, exponent, mod))
     self.assertEqual(app.modular_exp(base, -exponent, mod), pow(base, -exponent, mod))
 
-    # mod < 0
+    # mod > 0, base < 0
+    self.assertEqual(app.modular_exp(-base, exponent, mod), pow(-base, exponent, mod))
+    self.assertEqual(app.modular_exp(-base, -exponent, mod), pow(-base, -exponent, mod))
+
+    # mod < 0, base > 0
     self.assertEqual(app.modular_exp(base, exponent, -mod), pow(base, exponent, -mod))
     self.assertEqual(app.modular_exp(base, -exponent, -mod), pow(base, -exponent, -mod))
+
+    # mod < 0, base < 0
+    self.assertEqual(app.modular_exp(-base, exponent, -mod), pow(-base, exponent, -mod))
+    self.assertEqual(app.modular_exp(-base, -exponent, -mod), pow(-base, -exponent, -mod))
 
 
   def test_12a_pow_not_used_for_invalid_inverse(self):
