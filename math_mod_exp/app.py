@@ -41,17 +41,23 @@ def modular_inverse(base, modulus):
 
 def power_by_squaring(base_reduced, exponent, modulus):
     """Compute modular exponentiation using exponentiation by squaring."""
+    interim_values = []
+    
     result = 1
+    interim_values.append((base_reduced, result))
+
     while exponent > 0:
         if exponent & 1:  # if exp is odd (bitwise AND check for least sig. bit)
             result = (result * base_reduced) % abs(modulus)
         base_reduced = (base_reduced * base_reduced) % abs(modulus)
         exponent >>= 1  # division by 2 (bitwise right shift by 1)
 
+        interim_values.append((base_reduced, result))
+
     if modulus < 0 and result != 0:
         result -= abs(modulus)
 
-    return result
+    return result, interim_values
 
 
 def modular_exp(base, exponent, modulus):
@@ -89,7 +95,7 @@ def modular_exp(base, exponent, modulus):
     
     if exponent < 0:
         base_reduced = modular_inverse(base, modulus)
-        return power_by_squaring(base_reduced, -exponent, modulus)
+        return power_by_squaring(base_reduced, -exponent, modulus)[0]
 
     else:
-        return power_by_squaring(base % abs(modulus), exponent, modulus)
+        return power_by_squaring(base % abs(modulus), exponent, modulus)[0]

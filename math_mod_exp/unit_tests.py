@@ -260,6 +260,37 @@ class TestApp(unittest.TestCase):
     self.assertEqual(gcd, 2)
     self.assertEqual(a * x + b * y, gcd)  # Bézout identity
 
+  def test_14_miss_abs_in_power_by_squaring(self):
+
+    base = -5
+    exponent = 13
+    modulus = -17
+
+    def power_by_squaring_correct(base_reduced, exponent, modulus):
+        interim_values = []
+        result = 1
+        interim_values.append((base_reduced, result))
+        while exponent > 0:
+            if exponent & 1:
+                result = (result * base_reduced) % abs(modulus)
+            base_reduced = (base_reduced * base_reduced) % abs(modulus)
+            exponent >>= 1
+            
+            interim_values.append((base_reduced, result))
+
+        if modulus < 0 and result != 0:
+            result -= abs(modulus)
+
+        return result, interim_values
+    
+    base_reduced = base % abs(modulus)
+
+    implemented_result, implemented_interim = app.power_by_squaring(base_reduced, exponent, modulus)
+    correct_result, correct_interim = power_by_squaring_correct(base_reduced, exponent, modulus)
+
+    self.assertEqual(implemented_result, correct_result)
+    self.assertEqual(implemented_interim, correct_interim)
+
 
 if __name__ == '__main__':
     unittest.main()
