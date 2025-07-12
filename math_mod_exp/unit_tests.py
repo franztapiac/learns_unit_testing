@@ -260,11 +260,11 @@ class TestApp(unittest.TestCase):
     self.assertEqual(gcd, 2)
     self.assertEqual(a * x + b * y, gcd)  # Bézout identity
 
+
   def test_14a_miss_abs_in_modular_inverse(self):
     '''Comparing calculations from implemented modular_inverse(base, modulus) function with the correct function.'''
     
     base = -5
-    exponent = -13
     modulus = -17
 
     def modular_inverse_correct(base, modulus):
@@ -272,13 +272,14 @@ class TestApp(unittest.TestCase):
       if gcd != 1:
           raise ValueError(f"No modular inverse exists for {base} modulo {modulus}.")
       return inverse % abs(modulus), inverse_other
-    
-    base_reduced = base % abs(modulus)
 
     implemented_inverse, implemented_inverse_other = app.modular_inverse(base, modulus)
     correct_inverse, correct_inverse_other = modular_inverse_correct(base, modulus)
 
-    self.assertEqual(implemented_inverse_other, correct_inverse_other, "The first abs() function may be missing in extended_gcd(base % abs(modulus), abs(modulus)).")
+    self.assertEqual(implemented_inverse_other, correct_inverse_other, "The first abs() function may be missing in \"extended_gcd(base %% abs(modulus), abs(modulus))\".")
+
+    self.assertEqual(implemented_inverse, correct_inverse, "The abs() function may be missing in \"return inverse %% abs(modulus), inverse_other\".")
+
 
   def test_14b_miss_abs_in_power_by_squaring(self):
     '''Comparing calculations from implemented power_by_squaring(base_reduced, exponent, modulus) function with the correct function.'''
@@ -309,8 +310,12 @@ class TestApp(unittest.TestCase):
     implemented_result, implemented_interim = app.power_by_squaring(base_reduced, exponent, modulus)
     correct_result, correct_interim = power_by_squaring_correct(base_reduced, exponent, modulus)
 
-    self.assertEqual(implemented_result, correct_result, "The abs() function may be missing in result = (result * base_reduced) %% abs(modulus) or there may not be range adjustment for a negative modulus.")
-    self.assertEqual(implemented_interim, correct_interim, "The abs() function may be missing in base_reduced = (base_reduced * base_reduced) %% abs(modulus).")
+    self.assertEqual(implemented_result, correct_result, "The abs() function may be missing in \"result = (result * base_reduced) %% abs(modulus)\" or there may not be range adjustment for a negative modulus.")
+    self.assertEqual(implemented_interim, correct_interim, "The abs() function may be missing in \"base_reduced = (base_reduced * base_reduced) %% abs(modulus)\".")
+
+
+  def test_14c_miss_abs_in_modular_exp(self):
+    pass
 
 
 if __name__ == '__main__':
