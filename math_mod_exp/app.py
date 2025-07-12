@@ -33,10 +33,10 @@ def extended_gcd(a, b):
 
 def modular_inverse(base, modulus):
     """Computes the modular inverse of 'base' modulo 'modulus'."""
-    gcd, inverse, _ = extended_gcd(base % abs(modulus), abs(modulus))
+    gcd, inverse, inverse_other = extended_gcd(base % abs(modulus), abs(modulus))
     if gcd != 1:
         raise ValueError(f"No modular inverse exists for {base} modulo {modulus}.")
-    return inverse % abs(modulus)
+    return inverse % abs(modulus), inverse_other
 
 
 def power_by_squaring(base_reduced, exponent, modulus):
@@ -94,7 +94,7 @@ def modular_exp(base, exponent, modulus):
         return edge_result
     
     if exponent < 0:
-        base_reduced = modular_inverse(base, modulus)
+        base_reduced = modular_inverse(base, modulus)[0]
         return power_by_squaring(base_reduced, -exponent, modulus)[0]
 
     else:
