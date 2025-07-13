@@ -307,7 +307,8 @@ class TestApp(unittest.TestCase):
     
     base_reduced = base % abs(modulus)
 
-    impl_result, impl_interim = app.power_by_squaring(base_reduced, exponent, modulus)
+    _, impl_interim = app.power_by_squaring(base_reduced, exponent, modulus)
+    impl_result, _ = app.modular_exp(base, exponent, modulus)
     correct_result, correct_interim = power_by_squaring_correct(base_reduced, exponent, modulus)
 
     self.assertEqual(impl_result, correct_result, "The abs() function may be missing in \"result = (result * base_reduced) %% abs(modulus)\" or there may not be range adjustment for a negative modulus.")
