@@ -63,7 +63,7 @@ def power_by_squaring(base_reduced, exponent, modulus):
 def modular_exp(base, exponent, modulus):
     
     """
-    Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve modulus, like pow().
+    Efficient modular exponentiation (due to exponentiation by squaring) that supports +ve and -ve exponent, and +ve and -ve modulus, like pow().
 
     Arguments:
     - base (int)
@@ -74,6 +74,7 @@ def modular_exp(base, exponent, modulus):
     - result (int): satisfies result ≡ base^exponent (mod abs(modulus))
       and result lies in [0, modulus) if modulus > 0,
       or in [modulus, 0) if modulus < 0.
+    - base_reduced (int): the first reduction of the base. Returned for testing app functionality.
 
     Notes:
     - If base is negative, it is reduced modulo 'modulus' before computation.
@@ -89,13 +90,15 @@ def modular_exp(base, exponent, modulus):
 
     validate_inputs(base, exponent, modulus)
 
+    base_reduced = base % modulus
+
     edge_result = handle_edge_cases(base, exponent, modulus)
     if edge_result is not None:
-        return edge_result
-    
+        return edge_result, base_reduced
+
     if exponent < 0:
         base_reduced = modular_inverse(base, modulus)[0]
-        return power_by_squaring(base_reduced, -exponent, modulus)[0]
+        return power_by_squaring(base_reduced, -exponent, modulus)[0], base_reduced
 
     else:
-        return power_by_squaring(base % abs(modulus), exponent, modulus)[0]
+        return power_by_squaring(base_reduced, exponent, modulus)[0], base_reduced

@@ -11,19 +11,19 @@ class TestApp(unittest.TestCase):
     '''Tests basic modular exponentiation with positive, zero and negative bases.'''
     
     # all positive
-    self.assertEqual(app.modular_exp(5, 5, 13), pow(5, 5, 13))
+    self.assertEqual(app.modular_exp(5, 5, 13)[0], pow(5, 5, 13))
     
     # negative base
-    self.assertEqual(app.modular_exp(-3, 2, 7), pow(-3, 2, 7))
+    self.assertEqual(app.modular_exp(-3, 2, 7)[0], pow(-3, 2, 7))
     
     # exponent = 0
-    self.assertEqual(app.modular_exp(-3, 0, 4), pow(-3, 0, 4))
+    self.assertEqual(app.modular_exp(-3, 0, 4)[0], pow(-3, 0, 4))
 
     # base = 0
-    self.assertEqual(app.modular_exp(0, 13, 5), pow(0, 13, 5))
+    self.assertEqual(app.modular_exp(0, 13, 5)[0], pow(0, 13, 5))
 
     # int result
-    result = app.modular_exp(3, 4, 5)
+    result = app.modular_exp(3, 4, 5)[0]
     self.assertIsInstance(result, int)
 
 
@@ -47,22 +47,22 @@ class TestApp(unittest.TestCase):
   def test_3_incorrect_modulus(self):
     '''Raises ValueError when modulus is zero or negative.'''
     with self.assertRaises(ValueError):
-      app.modular_exp(2, 3, 0)
+      app.modular_exp(2, 3, 0)[0]
 
 
   def test_4_handle_negative_modulus(self):
     '''Verifies correct handling of negative modulus and both exponent signs.'''
 
     # exp > 0, varying base
-    self.assertEqual(app.modular_exp(2, 3, -5), pow(2, 3, -5))
-    self.assertEqual(app.modular_exp(-2, 3, -5), pow(-2, 3, -5))
-    self.assertEqual(app.modular_exp(0, 3, -5), pow(0, 3, -5))
+    self.assertEqual(app.modular_exp(2, 3, -5)[0], pow(2, 3, -5))
+    self.assertEqual(app.modular_exp(-2, 3, -5)[0], pow(-2, 3, -5))
+    self.assertEqual(app.modular_exp(0, 3, -5)[0], pow(0, 3, -5))
 
     # exp < 0, varying base
-    self.assertEqual(app.modular_exp(13, -4, -7), pow(13, -4, -7))
-    self.assertEqual(app.modular_exp(-13, -4, -7), pow(-13, -4, -7))
+    self.assertEqual(app.modular_exp(13, -4, -7)[0], pow(13, -4, -7))
+    self.assertEqual(app.modular_exp(-13, -4, -7)[0], pow(-13, -4, -7))
     with self.assertRaises(ValueError):
-      app.modular_exp(0, -4, -7)
+      app.modular_exp(0, -4, -7)[0]
 
 
   def test_5_mod_equals_one(self):
@@ -104,12 +104,12 @@ class TestApp(unittest.TestCase):
     '''Computes result using modular inverse for valid negative exponents.'''
     
     # mod > 0, varying base
-    self.assertEqual(app.modular_exp(-5, -13, 17), pow(-5, -13, 17))
-    self.assertEqual(app.modular_exp(5, -13, 17), pow(5, -13, 17))
+    self.assertEqual(app.modular_exp(-5, -13, 17)[0], pow(-5, -13, 17))
+    self.assertEqual(app.modular_exp(5, -13, 17)[0], pow(5, -13, 17))
   
     # mod < 0, varying base
-    self.assertEqual(app.modular_exp(-5, -13, -17), pow(-5, -13, -17))
-    self.assertEqual(app.modular_exp(5, -13, -17), pow(5, -13, -17))
+    self.assertEqual(app.modular_exp(-5, -13, -17)[0], pow(-5, -13, -17))
+    self.assertEqual(app.modular_exp(5, -13, -17)[0], pow(5, -13, -17))
 
 
   def test_8_no_modular_inverse(self):
@@ -117,28 +117,28 @@ class TestApp(unittest.TestCase):
     
     # mod > 0
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(-34, -13, 17) # -34 and 17 not coprime, inverse does not exist
+      app.modular_exp(-34, -13, 17)[0] # -34 and 17 not coprime, inverse does not exist
     self.assertEqual(str(e.exception), "No modular inverse exists for -34 modulo 17.")
     
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(0, -13, 17) # 0 has no inverse under any modulus
+      app.modular_exp(0, -13, 17)[0] # 0 has no inverse under any modulus
     self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo 17.")
 
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(34, -13, 17) # 34 and 17 not coprime
+      app.modular_exp(34, -13, 17)[0] # 34 and 17 not coprime
     self.assertEqual(str(e.exception), "No modular inverse exists for 34 modulo 17.")
 
     # mod < 0
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(-28, -9, -14) # -28 and -14 not coprime
+      app.modular_exp(-28, -9, -14)[0] # -28 and -14 not coprime
     self.assertEqual(str(e.exception), "No modular inverse exists for -28 modulo -14.")
     
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(0, -9, -14) # 0 has no inverse under any modulus
+      app.modular_exp(0, -9, -14)[0] # 0 has no inverse under any modulus
     self.assertEqual(str(e.exception), "No modular inverse exists for 0 modulo -14.")
 
     with self.assertRaises(ValueError) as e:
-      app.modular_exp(28, -9, -14) # 28 and -14 not coprime
+      app.modular_exp(28, -9, -14)[0] # 28 and -14 not coprime
     self.assertEqual(str(e.exception), "No modular inverse exists for 28 modulo -14.")
 
 
@@ -146,14 +146,14 @@ class TestApp(unittest.TestCase):
     '''Verifies correct result for trivial bases (±1) with large negative exponents.'''
     
     # mod > 0
-    self.assertEqual(app.modular_exp(1, -123456, 101), pow(1, -123456, 101))
-    self.assertEqual(app.modular_exp(-1, -123456, 101), pow(-1, -123456, 101))
-    self.assertEqual(app.modular_exp(-1, -123457, 101), pow(-1, -123457, 101))  # (-1)^odd = -1 ≡ 100 (mod 101)
+    self.assertEqual(app.modular_exp(1, -123456, 101)[0], pow(1, -123456, 101))
+    self.assertEqual(app.modular_exp(-1, -123456, 101)[0], pow(-1, -123456, 101))
+    self.assertEqual(app.modular_exp(-1, -123457, 101)[0], pow(-1, -123457, 101))  # (-1)^odd = -1 ≡ 100 (mod 101)
 
     # mod > 0
-    self.assertEqual(app.modular_exp(1, -123456, -101), pow(1, -123456, -101))
-    self.assertEqual(app.modular_exp(-1, -123456, -101), pow(-1, -123456, -101))
-    self.assertEqual(app.modular_exp(-1, -123457, -101), pow(-1, -123457, -101))  # (-1)^odd = -1 ≡ 100 (mod -101)
+    self.assertEqual(app.modular_exp(1, -123456, -101)[0], pow(1, -123456, -101))
+    self.assertEqual(app.modular_exp(-1, -123456, -101)[0], pow(-1, -123456, -101))
+    self.assertEqual(app.modular_exp(-1, -123457, -101)[0], pow(-1, -123457, -101))  # (-1)^odd = -1 ≡ 100 (mod -101)
 
 
   def test_10_exponentiation_complexity(self):
@@ -163,12 +163,12 @@ class TestApp(unittest.TestCase):
 
     # Small exponent
     start_small = time.perf_counter()
-    app.modular_exp(base, 100_000, mod)
+    app.modular_exp(base, 100_000, mod)[0]
     duration_small = time.perf_counter() - start_small
 
     # Large exponent
     start_large = time.perf_counter()
-    app.modular_exp(base, 100_000_000, mod)
+    app.modular_exp(base, 100_000_000, mod)[0]
     duration_large = time.perf_counter() - start_large
 
     # Now compare growth ratio
@@ -187,26 +187,26 @@ class TestApp(unittest.TestCase):
     mod = 1_000_000_007
     
     # mod > 0, base > 0
-    self.assertEqual(app.modular_exp(base, exponent, mod), pow(base, exponent, mod))
-    self.assertEqual(app.modular_exp(base, -exponent, mod), pow(base, -exponent, mod))
+    self.assertEqual(app.modular_exp(base, exponent, mod)[0], pow(base, exponent, mod))
+    self.assertEqual(app.modular_exp(base, -exponent, mod)[0], pow(base, -exponent, mod))
 
     # mod > 0, base < 0
-    self.assertEqual(app.modular_exp(-base, exponent, mod), pow(-base, exponent, mod))
-    self.assertEqual(app.modular_exp(-base, -exponent, mod), pow(-base, -exponent, mod))
+    self.assertEqual(app.modular_exp(-base, exponent, mod)[0], pow(-base, exponent, mod))
+    self.assertEqual(app.modular_exp(-base, -exponent, mod)[0], pow(-base, -exponent, mod))
 
     # mod < 0, base > 0
-    self.assertEqual(app.modular_exp(base, exponent, -mod), pow(base, exponent, -mod))
-    self.assertEqual(app.modular_exp(base, -exponent, -mod), pow(base, -exponent, -mod))
+    self.assertEqual(app.modular_exp(base, exponent, -mod)[0], pow(base, exponent, -mod))
+    self.assertEqual(app.modular_exp(base, -exponent, -mod)[0], pow(base, -exponent, -mod))
 
     # mod < 0, base < 0
-    self.assertEqual(app.modular_exp(-base, exponent, -mod), pow(-base, exponent, -mod))
-    self.assertEqual(app.modular_exp(-base, -exponent, -mod), pow(-base, -exponent, -mod))
+    self.assertEqual(app.modular_exp(-base, exponent, -mod)[0], pow(-base, exponent, -mod))
+    self.assertEqual(app.modular_exp(-base, -exponent, -mod)[0], pow(-base, -exponent, -mod))
 
 
   def test_12a_pow_not_used_for_invalid_inverse(self):
     '''Ensure pow() is not used when inverse does not exist (negative exponent case).'''
     with self.assertRaises(ValueError) as context:
-      app.modular_exp(6, -1, 9)
+      app.modular_exp(6, -1, 9)[0]
 
     msg = str(context.exception)
 
@@ -222,35 +222,35 @@ class TestApp(unittest.TestCase):
   def test_12b_pow_not_used_for_valid_inverse(self):
     '''Ensure pow() is not used when computing valid inverse with negative exponent.'''
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
-        result = app.modular_exp(3, -1, 11)
+        result = app.modular_exp(3, -1, 11)[0]
         self.assertEqual(result, 4)
 
 
   def test_12c_pow_not_used_for_positive_exponent(self):
     '''Ensure pow() is not used for standard positive exponentiation.'''
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
-      self.assertEqual(app.modular_exp(2, 5, 13), 6)
+      self.assertEqual(app.modular_exp(2, 5, 13)[0], 6)
 
 
   def test_12d_pow_not_used_for_zero_exponent(self):
     '''Ensure pow() is not used when exponent is zero.'''
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
-      self.assertEqual(app.modular_exp(42, 0, 101), 1)
+      self.assertEqual(app.modular_exp(42, 0, 101)[0], 1)
 
 
   def test_12e_pow_not_used_for_zero_base(self):
     '''Ensure pow() is not used when base is zero.'''
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
-      self.assertEqual(app.modular_exp(0, 3, 7), 0)
+      self.assertEqual(app.modular_exp(0, 3, 7)[0], 0)
 
 
   def test_12f_pow_not_used_for_trivial_moduli(self):
     '''Ensure pow() is not used for modulus = 1 or -1 (all results should be 0).'''
     with patch("builtins.pow", side_effect=AssertionError("pow() should not be used.")):
       # mod > 0
-      self.assertEqual(app.modular_exp(999, 999, 1), 0)
+      self.assertEqual(app.modular_exp(999, 999, 1)[0], 0)
       # mod < 0
-      self.assertEqual(app.modular_exp(999, 999, -1), 0)
+      self.assertEqual(app.modular_exp(999, 999, -1)[0], 0)
 
 
   def test_13_extended_gcd_identity(self):
@@ -289,34 +289,59 @@ class TestApp(unittest.TestCase):
     modulus = -17
 
     def power_by_squaring_correct(base_reduced, exponent, modulus):
-        interim_values = []
-        result = 1
-        interim_values.append((base_reduced, result))
-        while exponent > 0:
-            if exponent & 1:
-                result = (result * base_reduced) % abs(modulus)
-            base_reduced = (base_reduced * base_reduced) % abs(modulus)
-            exponent >>= 1
-            
-            interim_values.append((base_reduced, result))
+      interim_values = []
+      result = 1
+      interim_values.append((base_reduced, result))
+      while exponent > 0:
+          if exponent & 1:
+              result = (result * base_reduced) % abs(modulus)
+          base_reduced = (base_reduced * base_reduced) % abs(modulus)
+          exponent >>= 1
+          
+          interim_values.append((base_reduced, result))
 
-        if modulus < 0 and result != 0:
-            result -= abs(modulus)
+      if modulus < 0 and result != 0:
+          result -= abs(modulus)
 
-        return result, interim_values
+      return result, interim_values
     
     base_reduced = base % abs(modulus)
 
-    implemented_result, implemented_interim = app.power_by_squaring(base_reduced, exponent, modulus)
+    impl_result, impl_interim = app.power_by_squaring(base_reduced, exponent, modulus)
     correct_result, correct_interim = power_by_squaring_correct(base_reduced, exponent, modulus)
 
-    self.assertEqual(implemented_result, correct_result, "The abs() function may be missing in \"result = (result * base_reduced) %% abs(modulus)\" or there may not be range adjustment for a negative modulus.")
-    self.assertEqual(implemented_interim, correct_interim, "The abs() function may be missing in \"base_reduced = (base_reduced * base_reduced) %% abs(modulus)\".")
-
+    self.assertEqual(impl_result, correct_result, "The abs() function may be missing in \"result = (result * base_reduced) %% abs(modulus)\" or there may not be range adjustment for a negative modulus.")
+    self.assertEqual(impl_interim, correct_interim, "The abs() function may be missing in \"base_reduced = (base_reduced * base_reduced) %% abs(modulus)\".")
+    
 
   def test_14c_miss_abs_in_modular_exp(self):
-    pass
+    '''Comparing calculations from implemented modular_exp(base_reduced, exponent, modulus) function with the correct function.'''
 
+    base = -5
+    exponent = 13
+    modulus = -17
+
+    def modular_exp_correct(base, exponent, modulus):
+      app.validate_inputs(base, exponent, modulus)
+
+      base_reduced = base % abs(modulus)
+
+      edge_result = app.handle_edge_cases(base, exponent, modulus)
+      if edge_result is not None:
+          return edge_result, base_reduced
+
+      if exponent < 0:
+          base_reduced = app.modular_inverse(base, modulus)[0]
+          return app.power_by_squaring(base_reduced, -exponent, modulus)[0], base_reduced
+
+      else:
+          return app.power_by_squaring(base_reduced, exponent, modulus)[0], base_reduced
+
+    _, impl_first_reduction = app.modular_exp(base, exponent, modulus)
+    _, correct_first_reduction = modular_exp_correct(base, exponent, modulus)
+
+    self.assertEqual(impl_first_reduction, correct_first_reduction, "The abs() function may be missing in \"base_reduced = base %% abs(modulus)\" within modular_exp(base, exponent, modulus).")
+ 
 
 if __name__ == '__main__':
     unittest.main()
