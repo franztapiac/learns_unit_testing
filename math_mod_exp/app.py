@@ -90,7 +90,7 @@ def modular_exp(base, exponent, modulus):
 
     validate_inputs(base, exponent, modulus)
 
-    base_reduced = base % modulus
+    base_reduced = base % abs(modulus)
 
     edge_result = handle_edge_cases(base, exponent, modulus)
     if edge_result is not None:
