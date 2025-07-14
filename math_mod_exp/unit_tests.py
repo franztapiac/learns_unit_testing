@@ -28,22 +28,26 @@ class TestApp(unittest.TestCase):
 
 
   def test_2_invalid_inputs(self):
-    '''Raises TypeError for non-integer base, exponent, or modulus. Must not fall back to non-modular pow().'''
+    """Raises TypeError for non-integer base, exponent, or modulus."""
+    with self.assertRaises(TypeError):
+        app.modular_exp(2, 3, None)
 
-    invalid_inputs = [
-      ("base", 3, 5),
-      (2.5, 3, 5),
-      (2, "exponent", 5),
-      (2, 3.5, 5),
-      (2, 3, "mod"),
-      (2, 3, None),  # Critical: modulus must not be None
-    ]
+    with self.assertRaises(TypeError):
+      app.modular_exp("base", 3, 5)
+    
+    with self.assertRaises(TypeError):
+      app.modular_exp(2.5, 3, 5)
 
-    for args in invalid_inputs:
-      with self.assertRaises(TypeError, msg=f"Expected TypeError for args={args}. Built-in pow() may be used."):
-        app.modular_exp(*args)
+    with self.assertRaises(TypeError):
+        app.modular_exp(2, "exponent", 5)
 
-  
+    with self.assertRaises(TypeError):
+      app.modular_exp(2, 3.5, 5)
+
+    with self.assertRaises(TypeError):
+      app.modular_exp(2, 3, "mod")
+
+
   def test_3_incorrect_modulus(self):
     '''Raises ValueError when modulus is zero or negative.'''
     with self.assertRaises(ValueError):
