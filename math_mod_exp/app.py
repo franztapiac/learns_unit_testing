@@ -33,18 +33,16 @@ def extended_gcd(a, b):
 
 def modular_inverse(base, modulus):
     """Computes the modular inverse of 'base' modulo 'modulus'."""
-    gcd, inverse, inverse_other = extended_gcd(base % abs(modulus), abs(modulus))
+    gcd, inverse, _ = extended_gcd(base % abs(modulus), abs(modulus))
     if gcd != 1:
         raise ValueError(f"No modular inverse exists for {base} modulo {modulus}.")
-    return inverse % abs(modulus), inverse_other
+    return inverse % abs(modulus)
 
 
 def power_by_squaring(base_reduced, exponent, modulus):
     """Compute modular exponentiation using exponentiation by squaring."""
-    interim_values = []
     
     result = 1
-    interim_values.append((base_reduced, result))
 
     while exponent > 0:
         if exponent & 1:  # if exp is odd (bitwise AND check for least sig. bit)
@@ -52,12 +50,10 @@ def power_by_squaring(base_reduced, exponent, modulus):
         base_reduced = (base_reduced * base_reduced) % abs(modulus)
         exponent >>= 1  # division by 2 (bitwise right shift by 1)
 
-        interim_values.append((base_reduced, result))
-
     if modulus < 0 and result != 0:
         result -= abs(modulus)
 
-    return result, interim_values
+    return result
 
 
 def modular_exp(base, exponent, modulus):
@@ -74,7 +70,6 @@ def modular_exp(base, exponent, modulus):
     - result (int): satisfies result ≡ base^exponent (mod abs(modulus))
       and result lies in [0, modulus) if modulus > 0,
       or in [modulus, 0) if modulus < 0.
-    - base_reduced (int): the first reduction of the base. Returned for testing app functionality.
 
     Notes:
     - If base is negative, it is reduced modulo 'modulus' before computation.
@@ -90,15 +85,13 @@ def modular_exp(base, exponent, modulus):
 
     validate_inputs(base, exponent, modulus)
 
-    base_reduced = base % abs(modulus)
-
     edge_result = handle_edge_cases(base, exponent, modulus)
     if edge_result is not None:
-        return edge_result, base_reduced
+        return edge_result
 
     if exponent < 0:
-        base_reduced = modular_inverse(base, modulus)[0]
-        return power_by_squaring(base_reduced, -exponent, modulus)[0], base_reduced
+        base_reduced = modular_inverse(base, modulus)
+        return power_by_squaring(base_reduced, -exponent, modulus)
 
     else:
-        return power_by_squaring(base_reduced, exponent, modulus)[0], base_reduced
+        return power_by_squaring(base % abs(modulus), exponent, modulus)
