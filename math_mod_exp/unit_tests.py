@@ -69,35 +69,35 @@ class TestApp(unittest.TestCase):
     '''Checks that result is always 0 when |modulus| == 1.'''
 
     # mod = 1, exp > 0, varying base
-    self.assertEqual(app.handle_edge_cases(10, 100, 1), 0)
-    self.assertEqual(app.handle_edge_cases(-10, 100, 1), 0)
-    self.assertEqual(app.handle_edge_cases(0, 100, 1), 0)
+    self.assertEqual(app.modular_exp(10, 100, 1), 0)
+    self.assertEqual(app.modular_exp(-10, 100, 1), 0)
+    self.assertEqual(app.modular_exp(0, 100, 1), 0)
 
     # mod = 1, exp < 0, varying base
-    self.assertEqual(app.handle_edge_cases(10, -100, 1), 0)
-    self.assertEqual(app.handle_edge_cases(-10, -100, 1), 0)
-    self.assertEqual(app.handle_edge_cases(0, -100, 1), 0)
+    self.assertEqual(app.modular_exp(10, -100, 1), 0)
+    self.assertEqual(app.modular_exp(-10, -100, 1), 0)
+    self.assertEqual(app.modular_exp(0, -100, 1), 0)
 
     # mod = -1, exp > 0, varying base
-    self.assertEqual(app.handle_edge_cases(10, 100, -1), 0)
-    self.assertEqual(app.handle_edge_cases(-10, 100, -1), 0)
-    self.assertEqual(app.handle_edge_cases(0, 100, -1), 0)
+    self.assertEqual(app.modular_exp(10, 100, -1), 0)
+    self.assertEqual(app.modular_exp(-10, 100, -1), 0)
+    self.assertEqual(app.modular_exp(0, 100, -1), 0)
 
     # mod = -1, exp < 0, varying base
-    self.assertEqual(app.handle_edge_cases(10, -100, -1), 0)
-    self.assertEqual(app.handle_edge_cases(-10, -100, -1), 0)
-    self.assertEqual(app.handle_edge_cases(0, -100, -1), 0)
+    self.assertEqual(app.modular_exp(10, -100, -1), 0)
+    self.assertEqual(app.modular_exp(-10, -100, -1), 0)
+    self.assertEqual(app.modular_exp(0, -100, -1), 0)
 
 
   def test_6_zero_base_and_exponent(self):
     '''Ensures 0^0 mod m is correctly treated as 1 % m.'''
     # mod > 0
-    self.assertEqual(app.handle_edge_cases(0, 0, 7), 1 % 7)
-    self.assertEqual(app.handle_edge_cases(0, 0, 7), pow(0, 0, 7))
+    self.assertEqual(app.modular_exp(0, 0, 7), 1 % 7)
+    self.assertEqual(app.modular_exp(0, 0, 7), pow(0, 0, 7))
 
     # mod < 0
-    self.assertEqual(app.handle_edge_cases(0, 0, -7), 1 % -7)
-    self.assertEqual(app.handle_edge_cases(0, 0, -7), pow(0, 0, -7))
+    self.assertEqual(app.modular_exp(0, 0, -7), 1 % -7)
+    self.assertEqual(app.modular_exp(0, 0, -7), pow(0, 0, -7))
 
 
   def test_7_negative_exp_valid(self):
